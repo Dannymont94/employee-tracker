@@ -24,7 +24,6 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 
-
 ## getting started
 As the image illustrates, your schema should contain the following three tables:
 
@@ -70,3 +69,10 @@ View employees by department.
 Delete departments, roles, and employees.
 
 View the total utilized budget of a department—i.e., the combined salaries of all employees in that department.
+
+## to do
+create schema for employee, role, and department tables
+seed employee, role, and department tables
+create db routes
+console.table query results
+create inquirer prompts
