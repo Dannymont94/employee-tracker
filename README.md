@@ -73,6 +73,6 @@ View the total utilized budget of a department—i.e., the combined salaries of 
 ## to do
 create schema for employee, role, and department tables
 seed employee, role, and department tables
-create db routes
+create mysql routes
 console.table query results
 create inquirer prompts
