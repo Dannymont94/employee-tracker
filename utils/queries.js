@@ -43,8 +43,8 @@ async function viewAllEmployeesByManager() {
 
 async function viewAllRoles() {
   const sql = `SELECT roles.id, roles.title, roles.salary, departments.name AS department
-  FROM roles
-  LEFT JOIN departments ON departments.id = roles.department_id`;
+    FROM roles
+    LEFT JOIN departments ON departments.id = roles.department_id`;
   const params = [];
   const query = await connection.promise().query(sql, params);
   console.table(query[0]);
@@ -52,7 +52,7 @@ async function viewAllRoles() {
 
 async function viewAllDepartments() {
   const sql = `SELECT departments.id, departments.name
-  FROM departments`;
+    FROM departments`;
   const params = [];
   const query = await connection.promise().query(sql, params);
   console.table(query[0]);
@@ -63,18 +63,46 @@ async function viewBudgetByDepartment() {
     LEFT JOIN roles ON employees.role_id = roles.id
     LEFT JOIN departments ON roles.department_id = departments.id
     GROUP BY departments.name`;
-    const params = [];
-    const query = await connection.promise().query(sql, params);
-    console.table(query[0]);
+  const params = [];
+  const query = await connection.promise().query(sql, params);
+  console.table(query[0]);
 }
 
-// // Update employee managers
-// `UPDATE employees SET manager_id = ? WHERE id = ?;`
+async function getEmployeeNamesAndIds() {
+  const sql = `SELECT CONCAT(first_name, ' ', last_name) AS name, id AS value FROM employees`;
+  const params = [];
+  const query = await connection.promise().query(sql, params);
+  return query[0];
+};
 
-// // WHEN I choose to update an employee role
-// // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
-// `UPDATE employees SET employees.role_id = ? WHERE id = ?;`
+async function updateEmployeeManager({ managerId, employeeId }) {
+  const sql = `UPDATE employees SET manager_id = ? WHERE id = ?`;
+  const params = [managerId, employeeId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  Employee's manager has been updated   
+------------------------------------------
+  `);
+}
+  
+async function getRoleTitlesAndIds() {
+  const sql = `SELECT title AS name, id AS value FROM roles`;
+  const params = [];
+  const query = await connection.promise().query(sql, params);
+  return query[0];
+}
 
+async function updateEmployeeRole({ roleId, employeeId }) {
+  const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+  const params = [roleId, employeeId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  Employee's role has been updated   
+------------------------------------------
+    `)
+}
 // // WHEN I choose to add an employee
 // // THEN I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database
 // `INSERT INTO employees
@@ -112,5 +140,9 @@ module.exports = {
   viewAllEmployeesByManager,
   viewAllRoles,
   viewAllDepartments,
-  viewBudgetByDepartment 
+  viewBudgetByDepartment,
+  getEmployeeNamesAndIds,
+  updateEmployeeManager,
+  getRoleTitlesAndIds,
+  updateEmployeeRole
 }
