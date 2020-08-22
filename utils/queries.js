@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -75,22 +76,29 @@ async function getEmployeeNamesAndIds() {
   return query[0];
 };
 
+async function getRoleTitlesAndIds() {
+  const sql = `SELECT title AS name, id AS value FROM roles`;
+  const params = [];
+  const query = await connection.promise().query(sql, params);
+  return query[0];
+}
+
+async function getDepartmentNamesAndIds() {
+  const sql = `SELECT name, id AS value FROM departments`;
+  const params = [];
+  const query = await connection.promise().query(sql, params);
+  return query[0];
+}
+
 async function updateEmployeeManager({ managerId, employeeId }) {
   const sql = `UPDATE employees SET manager_id = ? WHERE id = ?`;
   const params = [managerId, employeeId];
   await connection.promise().execute(sql, params);
   console.log(`
 ------------------------------------------
-  Employee's manager has been updated   
+  Employee's manager successfully updated
 ------------------------------------------
   `);
-}
-  
-async function getRoleTitlesAndIds() {
-  const sql = `SELECT title AS name, id AS value FROM roles`;
-  const params = [];
-  const query = await connection.promise().query(sql, params);
-  return query[0];
 }
 
 async function updateEmployeeRole({ roleId, employeeId }) {
@@ -99,39 +107,79 @@ async function updateEmployeeRole({ roleId, employeeId }) {
   await connection.promise().execute(sql, params);
   console.log(`
 ------------------------------------------
-  Employee's role has been updated   
+  Employee's role successfully updated
 ------------------------------------------
-    `)
+  `);
 }
-// // WHEN I choose to add an employee
-// // THEN I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database
-// `INSERT INTO employees
-//   (first_name, last_name, role_id, manager_id)
-// VALUES
-//   (?,?,?,?);`
+
+async function addEmployee({ firstName, lastName, roleId, managerId}) {
+  const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+    VALUES (?,?,?,?)`;
+  const params = [firstName, lastName, roleId, managerId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  New employee successfully added
+------------------------------------------
+  `);
+}
   
-// // WHEN I choose to add a role
-// // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-// `INSERT INTO roles
-//   (title, salary, department_id)
-// VALUES
-//   (?,?,?);`
+async function addRole({ title, salary, departmentId }) {
+  const sql = `INSERT INTO roles (title, salary, department_id)
+    VALUES (?,?,?)`;
+  const params = [title, salary, departmentId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  New role successfully added
+------------------------------------------
+  `);
+}
 
-// // WHEN I choose to add a department
-// // THEN I am prompted to enter the name of the department and that department is added to the database
-// `INSERT INTO departments
-//   (name)
-// VALUES  
-//   (?);`
+async function addDepartment({ name }) {
+  const sql = `INSERT INTO departments (name)
+    VALUES (?)`;
+  const params = [name];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  New department successfully added
+------------------------------------------
+  `);
+}
 
-// // Delete an employee
-// `DELETE FROM employees WHERE id = ?`
+async function removeEmployee({ employeeId }) {
+  const sql = `DELETE FROM employees WHERE id = ?`;
+  const params = [employeeId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  Employee successfully deleted
+------------------------------------------
+  `);
+}
 
-// // Delete a role
-// `DELETE FROM roles WHERE id = ?;`
+async function removeRole({ roleId }) {
+  const sql = `DELETE FROM roles WHERE id = ?`;
+  const params = [roleId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  Role successfully deleted
+------------------------------------------
+  `);
+}
 
-// // Delete a department
-// `DELETE FROM departments WHERE id = ?;`
+async function removeDepartment({ departmentId }) {
+  const sql = `DELETE FROM departments WHERE id = ?`;
+  const params = [departmentId];
+  await connection.promise().execute(sql, params);
+  console.log(`
+------------------------------------------
+  Department successfully deleted
+------------------------------------------
+  `);
+}
 
 module.exports = {
   connection,
@@ -144,5 +192,12 @@ module.exports = {
   getEmployeeNamesAndIds,
   updateEmployeeManager,
   getRoleTitlesAndIds,
-  updateEmployeeRole
+  updateEmployeeRole,
+  addEmployee,
+  getDepartmentNamesAndIds,
+  addRole,
+  addDepartment,
+  removeEmployee,
+  removeRole,
+  removeDepartment
 }
