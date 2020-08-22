@@ -1,18 +1,19 @@
 const inquirer = require('inquirer');
-const { 
-  viewAllEmployees
+const {
+  connection,
+  viewAllEmployees,
   viewAllEmployeesByDepartment,
   viewAllEmployeesByManager,
   viewAllRoles,
   viewAllDepartments,
-  viewBudgetByDepartment
+  viewBudgetByDepartment 
 } = require('./queries');
 
-function startPrompts() {
+async function startPrompts() {
   return inquirer.prompt([
     {
       type: 'list',
-      name: 'topSelect',
+      name: 'mainMenu',
       message: 'What would you like to do?',
       choices: [
         'View All Employees',
@@ -32,32 +33,32 @@ function startPrompts() {
         'Exit Employee Tracker'
       ]
     }
-  ]).then(({ topSelect }) => checkTopSelect(topSelect));
+  ])
+  .then(async (data) => {
+    await checkMainMenu(data.mainMenu);
+  });
 }
 
-function checkTopSelect(topSelect) {
-  switch(topSelect) {
-    case 'View All Employees':
-      viewAllEmployees();
-      break;
-    case 'View All Employees By Department':
-      viewAllEmployeesByDepartment();
-      break;
-    case 'View All Employees By Manager':
-      viewAllEmployeesByManager();
-      break;
-    case 'View All Roles':
-      viewAllRoles();
-      break;
-    case 'View All Departments':
-      viewAllDepartments();
-      break;
-    case 'View Total Utilized Budget By Department':
-      viewBudgetByDepartment();
-      break;
-      default:
-        console.log('Good bye.');
+async function checkMainMenu(mainMenu) {
+  if (mainMenu === 'View All Employees') {
+    await viewAllEmployees()
+  } else if (mainMenu === 'View All Employees By Department') {
+    await viewAllEmployeesByDepartment();
+  } else if (mainMenu === 'View All Employees By Manager') {
+    await viewAllEmployeesByManager();
+  } else if (mainMenu === 'View All Roles') {
+    await viewAllRoles();
+  } else if (mainMenu === 'View All Departments') {
+    await viewAllDepartments();
+  } else if (mainMenu === 'View Total Utilized Budget By Department') {
+    await viewBudgetByDepartment();
+  } else {
+    await connection.end();
+    return console.log('Good bye.');
   }
+  return startPrompts();
 }
 
-module.exports = startPrompts;
+module.exports = {
+  startPrompts
+};
