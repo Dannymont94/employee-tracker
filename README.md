@@ -26,6 +26,8 @@ node index
 ```
 Then, interact with the application by answering the prompts that appear in the command line. When you are done using Employee Tracker, select 'Exit Employee Tracker' from the main menu.
 
+Here is a short [demo video](https://drive.google.com/file/d/1ddmq3vYVGS9pzfAxgfGVQ72WbZQJwK7Z/view) to help you use Employee Tracker.
+
 ## Screenshots
 ![main menu](https://user-images.githubusercontent.com/65088117/90987501-7a9a3d00-e559-11ea-8af4-511f927fc674.png)
 
