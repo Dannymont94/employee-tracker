@@ -71,8 +71,5 @@ Delete departments, roles, and employees.
 View the total utilized budget of a department—i.e., the combined salaries of all employees in that department.
 
 ## to do
-create schema for employee, role, and department tables
-seed employee, role, and department tables
-create mysql routes
-console.table query results
-create inquirer prompts
+film video
+clean up readme

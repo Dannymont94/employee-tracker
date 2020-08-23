@@ -55,13 +55,13 @@ async function updateEmployeeManagerPrompts(employeesArr) {
     {
       type: 'list',
       name: 'employeeId',
-      message: `Select the employee you'd like to update.`,
+      message: `Select the employee you'd like to update:`,
       choices: employeesArr
     },
     {
       type: 'list',
       name: 'managerId',
-      message: `Select this employee's new manager.`,
+      message: `Select this employee's new manager:`,
       choices: [...employeesArr, { name: 'None', value: null }]
     }
   ]);
@@ -72,13 +72,13 @@ async function updateEmployeeRolePrompts(employeesArr, rolesArr) {
     {
       type: 'list',
       name: 'employeeId',
-      message: `Select the employee you'd like to update.`,
+      message: `Select the employee you'd like to update:`,
       choices: employeesArr
     },
     {
       type: 'list',
       name: 'roleId',
-      message: `Select this employee's new role.`,
+      message: `Select this employee's new role:`,
       choices: rolesArr
     }
   ]);
@@ -89,23 +89,47 @@ async function addEmployeePrompts(employeesArr, rolesArr) {
     {
       type: 'input',
       name: 'firstName',
-      message: `Enter the new employee's first name.`
+      message: `Enter the new employee's first name:`,
+      validate: firstNameInput => {
+        if (firstNameInput) {
+          return true;
+        } else {
+          console.log(`
+------------------------------------------
+  Please enter a first name!
+------------------------------------------
+          `);
+          return false;
+        }
+      }
     },
     {
       type: 'input',
       name: 'lastName',
-      message: `Enter the new employee's last name.`
+      message: `Enter the new employee's last name:`,
+      validate: lastNameInput => {
+        if (lastNameInput) {
+          return true;
+        } else {
+          console.log(`
+------------------------------------------
+  Please enter a last name!
+------------------------------------------
+          `);
+          return false;
+        }
+      }
     },
     {
       type: 'list',
       name: 'roleId',
-      message: `Select this new employee's role.`,
+      message: `Select this new employee's role:`,
       choices: rolesArr
     },
     {
       type: 'list',
       name: 'managerId',
-      message: `Select this new employee's manager.`,
+      message: `Select this new employee's manager:`,
       choices: [...employeesArr, { name: 'None', value: null }]
     },
   ]);
@@ -115,17 +139,48 @@ async function addRolePrompts(departmentsArr) {
   return inquirer.prompt([
     {
       type: 'input',
-      message: `Enter the new role's title.`,
-      name: 'title'
+      message: `Enter the new role's title:`,
+      name: 'title',
+      validate: titleInput => {
+        if (titleInput) {
+          return true;
+        } else {
+          console.log(`
+------------------------------------------
+  Please enter a title!
+------------------------------------------
+          `);
+          return false;
+        }
+      }
     },
     {
       type: 'input',
-      message: `Enter the new role's salary.`,
-      name: 'salary'
+      message: `Enter the new role's salary:`,
+      name: 'salary',
+      validate: nameInput => {
+        if (!nameInput) {
+          console.log(`
+------------------------------------------
+  Please enter a salary!
+------------------------------------------
+          `);
+          return false;
+        } else if (isNaN(Number(nameInput))) {
+          console.log(`
+------------------------------------------
+  Salary must be a number!
+------------------------------------------
+          `);
+          return false;
+        } else {
+          return true;
+        }
+      }
     },
     {
       type: 'list',
-      message: `Select the new role's department.`,
+      message: `Select the new role's department:`,
       name: 'departmentId',
       choices: departmentsArr
     }
@@ -137,7 +192,19 @@ async function addDepartmentPrompts() {
     {
       type: 'input',
       name: 'name',
-      message: `Enter the new department's name.`
+      message: `Enter the new department's name:`,
+      validate: nameInput => {
+        if (nameInput) {
+          return true;
+        } else {
+          console.log(`
+------------------------------------------
+  Please enter a name!
+------------------------------------------
+          `);
+          return false;
+        }
+      }
     }
   ]);
 }
@@ -146,7 +213,7 @@ async function removeEmployeePrompts(employeesArr) {
   return inquirer.prompt([
     {
       type: 'list',
-      message: `Select the employee you'd like to delete.`,
+      message: `Select the employee you'd like to delete:`,
       name: 'employeeId',
       choices: employeesArr
     }
@@ -157,7 +224,7 @@ async function removeRolePrompts(rolesArr) {
   return inquirer.prompt([
     {
       type: 'list',
-      message: `Select the role you'd like to delete.`,
+      message: `Select the role you'd like to delete:`,
       name: 'roleId',
       choices: rolesArr
     }
@@ -168,7 +235,7 @@ async function removeDepartmentPrompts(departmentsArr) {
   return inquirer.prompt([
     {
       type: 'list',
-      message: `Select the department you'd like to delete.`,
+      message: `Select the department you'd like to delete:`,
       name: 'departmentId',
       choices: departmentsArr
     }
